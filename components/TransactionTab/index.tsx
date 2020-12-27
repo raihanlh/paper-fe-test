@@ -14,10 +14,10 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Fade from '@material-ui/core/Fade';
 import Typography from '@material-ui/core/Typography';
-import ViewModal from '../../components/AccountTab/ViewModal';
-import DeleteModal from '../../components/AccountTab/DeleteModal';
-import EditModal from '../../components/AccountTab/EditModal';
-import CreateAccount from '../../components/AccountTab/CreateAccount';
+// import ViewModal from '../AccountTab/ViewModal';
+// import DeleteModal from '../AccountTab/DeleteModal';
+// import EditModal from '../AccountTab/EditModal';
+import CreateTransaction from './CreateTransaction';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 
@@ -43,9 +43,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const AccountTab = () => {
+const TransactionTab = () => {
   const cookies = new Cookies();
   const classes = useStyles();
+  const [finances, setFinances] = useState([]);
   const [accounts, setAccounts] = useState([]);
 
   useEffect(() => {
@@ -59,7 +60,19 @@ const AccountTab = () => {
       setAccounts(res.data.data);
       setLoading(false);
       console.log(accounts);
+      axios.get('/api/finances', {
+        headers: {
+          "Authorization": auth
+        }
+      }).then((res) => {
+        console.log(res.data.data)
+        setFinances(res.data.data);
+        setLoading(false);
+        console.log(finances);
+      })
     })
+    console.log('account filter');
+    accounts.length > 0 && console.log(accounts.filter((account) => account.id === 2)[0].name);
   }, [])
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -87,8 +100,17 @@ const AccountTab = () => {
       console.log(res.data.data)
       setAccounts(res.data.data);
       setLoading(false);
-      console.log(accounts);
-    })
+      axios.get('/api/finances', {
+        headers: {
+          "Authorization": auth
+        }
+      }).then((res) => {
+        console.log(res.data.data)
+        setFinances(res.data.data);
+        setLoading(false);
+        console.log(finances);
+      });
+    });
   }
 
   return (
@@ -99,24 +121,30 @@ const AccountTab = () => {
       </Box>) :
       (
       <>
-        <CreateAccount />
+        <CreateTransaction accounts={accounts.filter((account) => {
+          return !account.deleted_at
+        })}/>
         <TableContainer>
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>Account Name</TableCell>
+                <TableCell>Transaction Date</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Finance Account Name</TableCell>
                 <TableCell>Description</TableCell>
-                <TableCell>Account Type</TableCell>
+                <TableCell>Amount</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-                {accounts.map((account) => (
-                  account.deleted_at ? null : (
-                  <TableRow key={account.id}>
-                    <TableCell>{account.name}</TableCell>
-                    <TableCell>{account.description}</TableCell>
-                    <TableCell>{account.type}</TableCell>
+                {finances.map((finance, index) => (
+                  finance.deleted_at ? null : (
+                  <TableRow key={index}>
+                    <TableCell>{finance.created_at}</TableCell>
+                    <TableCell>{finance.title}</TableCell>
+                    <TableCell>{accounts.length > 0 && accounts.filter((account) => account.id === 2)[0].name}</TableCell>
+                    <TableCell>{finance.description}</TableCell>
+                    <TableCell>{finance.debit_amount}</TableCell>
                     <TableCell>
                       <Button className={classes.btnAction} onClick={handleClick(0)}>Action</Button>
                       <Menu
@@ -128,13 +156,13 @@ const AccountTab = () => {
                         TransitionComponent={Fade}
                       >
                         <MenuItem>
-                          <ViewModal id={account.id}/>
+                          {/* <ViewModal id={account.id}/> */}
                         </MenuItem>
                         <MenuItem>
-                          <EditModal id={account.id}/>
+                          {/* <EditModal id={account.id}/> */}
                         </MenuItem>
                         <MenuItem>
-                          <DeleteModal id={account.id}/>
+                          {/* <DeleteModal id={account.id}/> */}
                         </MenuItem>
                       </Menu>
                     </TableCell>
@@ -150,4 +178,4 @@ const AccountTab = () => {
   )
 }
 
-export default AccountTab;
+export default TransactionTab;

@@ -100,6 +100,7 @@ export default (req, res) => {
             let data = [];
             result.forEach(record => {
               const {
+                _id,
                 title,
                 debit_amount,
                 credit_amount,
@@ -111,6 +112,7 @@ export default (req, res) => {
               } = record;
 
               data.push({
+                id: _id,
                 title,
                 debit_amount,
                 credit_amount,

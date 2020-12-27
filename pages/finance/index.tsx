@@ -8,6 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import LogoutButton from '../../components/LogoutButton';
 import AccountTab from '../../components/AccountTab';
+import TransactionTab from '../../components/TransactionTab';
 import Cookies from 'universal-cookie';
 import { useRouter } from 'next/router'
 
@@ -162,14 +163,14 @@ const Finance = () => {
           <AppBar position="static">
             <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
               <Tab label="Account" {...a11yProps(0)} />
-              <Tab label="Finance" {...a11yProps(1)} />
+              <Tab label="Transaction" {...a11yProps(1)} />
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
             <AccountTab />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Finance
+            <TransactionTab />
           </TabPanel>
         </div>
       </main>
