@@ -88,6 +88,7 @@ export default (req, res) => {
             let data = [];
             result.forEach(record => {
               const {
+                _id,
                 name,
                 description,
                 type,
@@ -96,6 +97,7 @@ export default (req, res) => {
                 deleted_at
               } = record;
               data.push({
+                id: _id,
                 name,
                 description,
                 type,

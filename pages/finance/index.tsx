@@ -1,27 +1,15 @@
 import Head from 'next/head'
 import Navbar from '../../components/Navbar'
-import React from 'react';
-import clsx from 'clsx';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import LogoutButton from '../../components/LogoutButton';
+import AccountTab from '../../components/AccountTab';
+import Cookies from 'universal-cookie';
+import { useRouter } from 'next/router'
 
 const drawerWidth = 240;
 
@@ -128,7 +116,7 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -144,12 +132,21 @@ function a11yProps(index: any) {
 
 const Finance = () => {
   const classes = useStyles();
+  const router = useRouter();
+  const cookies = new Cookies();
 
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    let token = cookies.get('token');
+    if (!token) {
+      router.push('/login');
+    }
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -160,21 +157,21 @@ const Finance = () => {
 
       <Navbar />
       <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
+        <LogoutButton />
         <div className={classes.tabPanel}>
-        <AppBar position="static">
-          <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-            <Tab label="Account" {...a11yProps(0)} />
-            <Tab label="Finance" {...a11yProps(1)} />
-          </Tabs>
-        </AppBar>
-        <TabPanel value={value} index={0}>
-          Item One
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          Item Two
-        </TabPanel>
-    </div>
+          <AppBar position="static">
+            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+              <Tab label="Account" {...a11yProps(0)} />
+              <Tab label="Finance" {...a11yProps(1)} />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+            <AccountTab />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            Finance
+          </TabPanel>
+        </div>
       </main>
     </div>
   )

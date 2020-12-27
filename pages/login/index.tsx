@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,6 +14,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useRouter } from 'next/router'
+import axios from 'axios';
+import Cookies from 'universal-cookie';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,17 +84,63 @@ const LoginTextField = withStyles({
 })(TextField);
 
 export default function Login() {
-  const router = useRouter()
+  const router = useRouter();
+  const cookies = new Cookies();
 
+  useEffect(() => {
+    let token = cookies.get('token');
+    if (token) {
+      router.push('/finance');
+    }
+  }, [])
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.currentTarget.value)
+  }
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.currentTarget.value)
+  }
   const classes = useStyles();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    router.push('/');
+    console.log(username);
+    console.log(password);
+    axios.post('/api/login', {username, password})
+      .then((res) => 
+      {
+        if (res.status === 200) {
+        console.log(res.data);
+        cookies.set('token', res.data.token, {
+          path: '/',
+          expires: new Date(Date.now() + 3000 * 1000)
+        })
+        cookies.set('username', username, {
+          path: '/',
+          expires: new Date(Date.now() + 3000 * 1000)
+        })
+        cookies.set('name', res.data.name, {
+          path: '/',
+          expires: new Date(Date.now() + 3000 * 1000)
+        })
+        cookies.set('last_login', res.data.last_login, {
+          path: '/',
+          expires: new Date(Date.now() + 3000 * 1000)
+        })
+        router.push('/');
+      }});
+    // router.push('/');
   }
 
   return (
     <Grid container component="main" className={classes.root}>
+      <Head>
+        <title>Login</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <CssBaseline />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={0} square className={classes.root}>
         <div className={classes.paper}>
@@ -107,10 +156,10 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
               inputProps={{
                 classes: {
@@ -119,7 +168,8 @@ export default function Login() {
                   notchedOutline: classes.notchedOutline,
                 },
               }}
-            />
+              onChange={onChangeUsername}
+              />
             <LoginTextField
               variant="outlined"
               margin="normal"
@@ -130,6 +180,7 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={onChangePassword}
             />
             <Button
               type="submit"

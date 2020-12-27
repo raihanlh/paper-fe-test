@@ -20,6 +20,7 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import LogoutButton from '../../components/LogoutButton';
 
 const drawerWidth = 240;
 
@@ -115,7 +116,7 @@ const Dashboard = () => {
 
       <Navbar />
       <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
+        <LogoutButton />
       </main>
     </div>
   )
