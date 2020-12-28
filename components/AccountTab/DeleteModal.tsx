@@ -48,7 +48,6 @@ const DeleteModal = (props) => {
 
   const handleOpen = () => {
     setOpen(true);
-    // console.log(open);
   };
 
   const handleClose = () => {
@@ -75,7 +74,6 @@ const DeleteModal = (props) => {
           "Authorization": auth
         }
       }).then((res) => {
-        console.log(res.data)
         setAccount(res.data);
       })
   }

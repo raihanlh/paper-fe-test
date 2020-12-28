@@ -63,9 +63,6 @@ const CreateAccount = (props) => {
   }
   const handleSave = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    console.log(name);
-    console.log(type);
-    console.log(description);
 
     let auth = `Bearer ${cookies.get('token')}`;
     axios.patch(`/api/finance-accounts/${props.id}`, 

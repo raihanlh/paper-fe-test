@@ -107,13 +107,10 @@ export default function Login() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log(username);
-    console.log(password);
     axios.post('/api/login', {username, password})
       .then((res) => 
       {
         if (res.status === 200) {
-        console.log(res.data);
         cookies.set('token', res.data.token, {
           path: '/',
           expires: new Date(Date.now() + 3000 * 1000)

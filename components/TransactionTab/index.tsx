@@ -14,9 +14,9 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Fade from '@material-ui/core/Fade';
 import Typography from '@material-ui/core/Typography';
-// import ViewModal from '../AccountTab/ViewModal';
-// import DeleteModal from '../AccountTab/DeleteModal';
+import ViewTransaction from './ViewTransaction';
 // import EditModal from '../AccountTab/EditModal';
+import DeleteTransaction from './DeleteTransaction';
 import CreateTransaction from './CreateTransaction';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
@@ -71,8 +71,6 @@ const TransactionTab = () => {
         console.log(finances);
       })
     })
-    console.log('account filter');
-    accounts.length > 0 && console.log(accounts.filter((account) => account.id === 2)[0].name);
   }, [])
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -142,7 +140,7 @@ const TransactionTab = () => {
                   <TableRow key={index}>
                     <TableCell>{finance.created_at}</TableCell>
                     <TableCell>{finance.title}</TableCell>
-                    <TableCell>{accounts.length > 0 && accounts.filter((account) => account.id === 2)[0].name}</TableCell>
+                    <TableCell>{accounts.filter((account) => account.id === finance.finance_account_id)[0] && accounts.filter((account) => account.id === finance.finance_account_id)[0].name}</TableCell>
                     <TableCell>{finance.description}</TableCell>
                     <TableCell>{finance.debit_amount}</TableCell>
                     <TableCell>
@@ -156,13 +154,13 @@ const TransactionTab = () => {
                         TransitionComponent={Fade}
                       >
                         <MenuItem>
-                          {/* <ViewModal id={account.id}/> */}
+                          <ViewTransaction id={finance.id} account_name={accounts.filter((account) => account.id === finance.finance_account_id)[0] && accounts.filter((account) => account.id === finance.finance_account_id)[0].name}/>
                         </MenuItem>
                         <MenuItem>
                           {/* <EditModal id={account.id}/> */}
                         </MenuItem>
                         <MenuItem>
-                          {/* <DeleteModal id={account.id}/> */}
+                          <DeleteTransaction id={finance.id}/>
                         </MenuItem>
                       </Menu>
                     </TableCell>

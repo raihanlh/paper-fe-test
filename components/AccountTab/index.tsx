@@ -55,10 +55,8 @@ const AccountTab = () => {
         "Authorization": auth
       }
     }).then((res) => {
-      console.log(res.data.data)
       setAccounts(res.data.data);
       setLoading(false);
-      console.log(accounts);
     })
   }, [])
 
@@ -84,10 +82,8 @@ const AccountTab = () => {
         "Authorization": auth
       }
     }).then((res) => {
-      console.log(res.data.data)
       setAccounts(res.data.data);
       setLoading(false);
-      console.log(accounts);
     })
   }
 

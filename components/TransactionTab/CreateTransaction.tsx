@@ -60,19 +60,20 @@ const CreateTransaction = (props) => {
   const cookies = new Cookies();
   const [open, setOpen] = useState(false);
 
-  // const [accounts, setAccounts] = useState([]);
-  // useEffect(() => {
-  //   setAccounts(props.accounts.filter((account) => {
-  //     return !account.deleted_at
-  //   }))
-  //   console.log(props.accounts[0].id);
-  // }, [])
+  const [accounts, setAccounts] = useState([]);
+  useEffect(() => {
+    setAccounts(props.accounts.filter((account) => {
+      return !account.deleted_at
+    }))
+    console.log(props.accounts[0].id);
+  }, [])
 
   const [title, setTitle] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [description, setDescription] = useState<string>('');
-  const [accountId, setAccountId] = useState<null | number | string>(props.accounts[0].id);
-
+  const [accountId, setAccountId] = useState(props.accounts[0].id);
+  console.log(props.accounts[0].id);
+  console.log("accountId:" + accountId);
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
   }
@@ -82,8 +83,9 @@ const CreateTransaction = (props) => {
   const onChangeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.currentTarget.value);
   }
-  const onChangeAccountId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAccountId(parseInt(e.currentTarget.value));
+  const onChangeAccountId = (e: React.ChangeEvent<{ value: unknown }>) => {
+    console.log("onChangeAccountId" + e.currentTarget.value);
+    setAccountId(e.currentTarget.value as int);
   }
   
   const handleSave = (e: React.MouseEvent<HTMLElement>) => {
@@ -121,10 +123,11 @@ const CreateTransaction = (props) => {
   };
 
   const accountList = props.accounts.map((account, index) => {
+    console.log("account id: " + account.id);
     return (
       account.deleted_at ? null :
       (<MenuItem value={account.id} className={classes.action} key={index}>
-        {account.name}
+       {`${account.id} ${account.name}`}
       </MenuItem>)
     )
   });
@@ -150,7 +153,11 @@ const CreateTransaction = (props) => {
             id="demo-simple-select"
             value={accountId}
             onChange={onChangeAccountId}
+            onBlur={undefined}
           >
+            <MenuItem value={0} className={classes.action}>
+              None
+            </MenuItem>
             {accountList}
           </Select>
         </FormControl>

@@ -50,7 +50,6 @@ const ViewModal = (props) => {
 
   const handleOpen = () => {
     setOpen(true);
-    // console.log(open);
   };
 
   const handleClose = () => {
@@ -68,7 +67,6 @@ const ViewModal = (props) => {
           "Authorization": auth
         }
       }).then((res) => {
-        console.log(res.data)
         setAccount(res.data);
       })
   }
